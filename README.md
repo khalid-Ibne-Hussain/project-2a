@@ -2,7 +2,9 @@
 
 ### Link: https://project-2a-eight.vercel.app/
 
-### apis end-points
+### api end-points
+
+"\* = https://project-2a-eight.vercel.app".
 
 - Create a newUser: \*/api/users (post)
 - Retrieve allUsers: \*/api/users (get)
