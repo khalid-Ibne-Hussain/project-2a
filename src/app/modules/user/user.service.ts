@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import { TUser } from './user.interface';
 import { User } from '../user.model';
 // import UserModel  from './user.interface';
@@ -48,10 +49,41 @@ const deleteUserFromDB = async (userId: string) => {
   return result.deletedCount === 1;
 };
 
+// add new product to order
+const addProductToOrder = async (
+  userId: number,
+  orderData: { productName: string; price: number; quantity: number },
+) => {
+  try {
+    // Find the user by userId
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      throw new Error('User not found.');
+    }
+
+    // If the user already has an 'orders' array, append the new product
+    if (user.orders && Array.isArray(user.orders)) {
+      user.orders.push(orderData);
+    } else {
+      // If 'orders' array doesn't exist, create it and add the new product
+      user.orders = [orderData];
+    }
+
+    // Save the updated user document
+    await user.save();
+
+    return null; // No specific data to return in this case
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getSingleUserFromDB,
   deleteUserFromDB,
   updateUserFromDB,
+  addProductToOrder,
 };

@@ -12,7 +12,7 @@ app.use(cors());
 app.use('/api/users', UserRoutes);
 
 const getAController = (req: Request, res: Response) => {
-  res.send('Hello World!');
+  res.send('Application running!');
 };
 
 app.get('/', getAController);
