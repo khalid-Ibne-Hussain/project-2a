@@ -73,7 +73,7 @@ const getAllUsers = async (req: Request, res: Response) => {
     }
 
     // apply field filtering
-    const filteredResult = result.map((user) => ({
+    const filteredResult = result.map((user: any) => ({
       username: user.username,
       fullName: user.fullName,
       age: user.age,
@@ -118,10 +118,22 @@ const getSingleUser = async (req: Request, res: Response) => {
     }
 
     //   if user found
+    // __________________field filtering
+    const filteredResult = {
+      userId: result.userId,
+      username: result.username,
+      fullName: result.fullName,
+      age: result.age,
+      email: result.email,
+      isActive: result.isActive,
+      hobbies: result.hobbies,
+      address: result.address,
+    };
+    // __________________
     res.status(200).json({
       success: true,
       message: 'User fetched successfully!',
-      data: result,
+      data: filteredResult,
     });
   } catch (err: any) {
     res.status(500).json({
