@@ -254,6 +254,34 @@ const getOrdersForUser = async (req: Request, res: Response) => {
   }
 };
 
+// get total price for specific userId__________________
+const calculateTotalPriceForUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const totalPrice = await UserServices.calculateTotalPriceForUserFromDB(
+      Number(userId),
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: {
+        totalPrice,
+      },
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: error.message || 'Error calculating total price.',
+      error: {
+        code: 404,
+        description: 'USER_NOT_FOUND',
+      },
+    });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
@@ -261,4 +289,5 @@ export const UserControllers = {
   updateUser,
   deleteUser,
   getOrdersForUser,
+  calculateTotalPriceForUser,
 };

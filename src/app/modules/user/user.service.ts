@@ -62,24 +62,24 @@ const addProductToOrder = async (
       throw new Error('User not found.');
     }
 
-    // If the user already has an 'orders' array, append the new product
+    // If orders array already exist, append
     if (user.orders && Array.isArray(user.orders)) {
       user.orders.push(orderData);
     } else {
-      // If 'orders' array doesn't exist, create it and add the new product
+      // If orders doesn't exist create and add
       user.orders = [orderData];
     }
 
     // Save the updated user document
     await user.save();
 
-    return null; // No specific data to return in this case
+    return null;
   } catch (error) {
     throw error;
   }
 };
 
-// get orders by userID__________
+// get orders by userID__________________________________
 const getOrdersForUserFromDB = async (userId: number) => {
   try {
     // Find the user by userId
@@ -97,6 +97,29 @@ const getOrdersForUserFromDB = async (userId: number) => {
   }
 };
 
+// get total price for specific id__________________________
+const calculateTotalPriceForUserFromDB = async (userId: number) => {
+  try {
+    // Find the user by userId
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      throw new Error('User not found.');
+    }
+
+    const totalPrice = user.orders
+      ? user.orders.reduce(
+          (total, order) => total + order.price * order.quantity,
+          0,
+        )
+      : 0;
+
+    return totalPrice;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
@@ -105,4 +128,5 @@ export const UserServices = {
   updateUserFromDB,
   addProductToOrder,
   getOrdersForUserFromDB,
+  calculateTotalPriceForUserFromDB,
 };
