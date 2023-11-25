@@ -228,10 +228,37 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+// get order by userID________________
+const getOrdersForUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const orders = await UserServices.getOrdersForUserFromDB(Number(userId));
+
+    res.status(200).json({
+      success: true,
+      message: 'Orders fetched successfully!',
+      data: {
+        orders,
+      },
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: error.message || 'Error fetching orders.',
+      error: {
+        code: 404,
+        description: 'USER_NOT_FOUND',
+      },
+    });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
   updateUser,
   deleteUser,
+  getOrdersForUser,
 };

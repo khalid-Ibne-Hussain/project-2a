@@ -49,7 +49,7 @@ const deleteUserFromDB = async (userId: string) => {
   return result.deletedCount === 1;
 };
 
-// add new product to order
+// add new product to order__________
 const addProductToOrder = async (
   userId: number,
   orderData: { productName: string; price: number; quantity: number },
@@ -79,6 +79,24 @@ const addProductToOrder = async (
   }
 };
 
+// get orders by userID__________
+const getOrdersForUserFromDB = async (userId: number) => {
+  try {
+    // Find the user by userId
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      throw new Error('User not found.');
+    }
+
+    const orders = user.orders || [];
+
+    return orders;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
@@ -86,4 +104,5 @@ export const UserServices = {
   deleteUserFromDB,
   updateUserFromDB,
   addProductToOrder,
+  getOrdersForUserFromDB,
 };
