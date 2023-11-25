@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-catch */
-import { TUser } from './user.interface';
+import { TOrder, TUser } from './user.interface';
 import { User } from '../user.model';
 // import UserModel  from './user.interface';
 
@@ -49,34 +49,42 @@ const deleteUserFromDB = async (userId: string) => {
   return result.deletedCount === 1;
 };
 
-// add new product to order__________
-const addProductToOrder = async (
-  userId: number,
-  orderData: { productName: string; price: number; quantity: number },
-) => {
-  try {
-    // Find the user by userId
-    const user = await User.findOne({ userId });
+// add new product to order_______________________________
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const addNewProductInOrderInDB = async (userId: number, orderData: TOrder) => {
+  //   console.log(orderData);
+  //   console.log(userId);
+  const user = await User.findOne({ userId });
 
-    if (!user) {
-      throw new Error('User not found.');
-    }
+  console.log(user);
 
-    // If orders array already exist, append
-    if (user.orders && Array.isArray(user.orders)) {
-      user.orders.push(orderData);
-    } else {
-      // If orders doesn't exist create and add
-      user.orders = [orderData];
-    }
-
-    // Save the updated user document
-    await user.save();
-
-    return null;
-  } catch (error) {
-    throw error;
+  if (!user) {
+    console.log('1');
+    throw new Error('User not found');
   }
+
+  // check orders property exists, if not thn create
+  if (!user.orders) {
+    console.log('2');
+    user.orders = [];
+  }
+
+  // Append the new order
+  const abc = user.orders.push(orderData);
+  //   console.log(user);
+  console.log(abc);
+  console.log('3');
+
+  // Save the updated user
+  await user.save();
+  console.log(user.orders);
+
+  // Return success response
+  return {
+    success: true,
+    message: 'Order created successfully!',
+    data: user.orders,
+  };
 };
 
 // get orders by userID__________________________________
@@ -126,7 +134,7 @@ export const UserServices = {
   getSingleUserFromDB,
   deleteUserFromDB,
   updateUserFromDB,
-  addProductToOrder,
+  addNewProductInOrderInDB,
   getOrdersForUserFromDB,
   calculateTotalPriceForUserFromDB,
 };

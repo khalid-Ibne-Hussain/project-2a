@@ -153,7 +153,7 @@ const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     // console.log(userId);
-    const updatedUserData = req.body; // Assuming the updated data is in the request body
+    const updatedUserData = req.body;
     // console.log(updatedUserData);
 
     const updatedUser = await UserServices.updateUserFromDB(
@@ -228,6 +228,33 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+// add new order for specific id______________________________
+const addNewProductInOrder = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const orderData = req.body;
+    // console.log(userId);
+    // console.log(orderData);
+
+    await UserServices.addNewProductInOrderInDB(Number(userId), orderData);
+
+    res.status(200).json({
+      success: true,
+      message: 'Order created successfully!',
+      data: null,
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: error.message || 'Error creating order.',
+      error: {
+        code: 404,
+        description: 'USER_NOT_FOUND',
+      },
+    });
+  }
+};
+
 // get order by userID________________
 const getOrdersForUser = async (req: Request, res: Response) => {
   try {
@@ -288,6 +315,7 @@ export const UserControllers = {
   getSingleUser,
   updateUser,
   deleteUser,
+  addNewProductInOrder,
   getOrdersForUser,
   calculateTotalPriceForUser,
 };

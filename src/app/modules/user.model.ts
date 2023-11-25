@@ -54,6 +54,15 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
+//
+// userSchema.post('save', function (doc, next) {
+//   const ordersArray = { orders: doc.orders };
+
+//   Object.assign(doc, ordersArray);
+
+//   next();
+// });
+
 // create custom static________________
 userSchema.statics.isUserExists = async function (userId) {
   const existingUser = await User.findOne({ userId });
