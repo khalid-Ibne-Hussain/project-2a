@@ -61,6 +61,10 @@ userSchema.statics.isUserExists = async function (userId) {
   return existingUser;
 };
 
+// userSchema.pre('find', function (next)){
+//     next();
+// }
+
 // make model_______________
 export const User = model<TUser, UserModel>('User', userSchema);
 

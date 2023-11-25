@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { UserServices } from './user.service';
 import UserValidationSchema from './user.validation';
 import { ZodError } from 'zod';
+// import { TUser } from './user.interface';
 
 // create user_____________________________
 const createUser = async (req: Request, res: Response) => {
@@ -147,6 +148,50 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// update user_________________________________________
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    // console.log(userId);
+    const updatedUserData = req.body; // Assuming the updated data is in the request body
+    // console.log(updatedUserData);
+
+    const updatedUser = await UserServices.updateUserFromDB(
+      userId,
+      updatedUserData,
+    );
+    console.log(updatedUser);
+
+    if (!updatedUser) {
+      // If the user was not found or not updated
+      res.status(404).json({
+        success: false,
+        message: 'User not found or not updated!',
+        error: {
+          code: 404,
+          description: 'User not found or not updated!',
+        },
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully!',
+      data: updatedUser,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Internal Server Error',
+      error: {
+        code: 500,
+        description: 'INTERNAL_SERVER_ERROR',
+      },
+    });
+  }
+};
+
 // delete user by userId
 const deleteUser = async (req: Request, res: Response) => {
   try {
@@ -187,5 +232,6 @@ export const UserControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
+  updateUser,
   deleteUser,
 };
