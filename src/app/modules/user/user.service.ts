@@ -17,14 +17,23 @@ const getAllUsersFromDB = async () => {
   return result;
 };
 
+// get data by id
 const getSingleUserFromDB = async (userId: string) => {
   const result = await User.findOne({ userId });
   //   console.log(result);
   return result;
 };
 
+// delete user by id
+const deleteUserFromDB = async (userId: string) => {
+  const result = await User.deleteOne({ userId });
+
+  return result.deletedCount === 1;
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getSingleUserFromDB,
+  deleteUserFromDB,
 };
