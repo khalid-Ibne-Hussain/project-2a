@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-useless-catch */
 import { TOrder, TUser } from './user.interface';
 import { User } from '../user.model';
+import { Error } from 'mongoose';
 // import UserModel  from './user.interface';
 
 // create user
@@ -11,7 +13,10 @@ const createUserIntoDB = async (userData: TUser) => {
   }
 
   const result = await User.create(userData);
-  return result;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password, ...userWithoutPassword } = result.toObject();
+
+  return userWithoutPassword;
 };
 
 // get all users
@@ -28,18 +33,36 @@ const getSingleUserFromDB = async (userId: string) => {
 };
 
 // update data____________________________________
-const updateUserFromDB = async (userId: string, updatedUserData: TUser) => {
-  const updatedUser = await User.findOneAndUpdate({ userId }, updatedUserData, {
-    new: true,
-    projection: { password: 0 },
-  });
+const updateUserIntoDB = async (userId: number, updatedUserData: TUser) => {
+  // const userIdd = userId.toString;
+  // const findUser = await User.findOne({ userId });
+  // console.log({ findUser });
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { userId },
+      updatedUserData,
+      {
+        new: true,
+        projection: { password: 0 },
+      },
+    ).lean();
 
-  if (!updatedUser) {
-    // If user not found
-    throw new Error('User not found for update.');
+    if (!updatedUser) {
+      // If user not found
+      throw new Error('User not found for update.');
+    }
+
+    // console.log(typeof userId);
+    console.log({ updatedUserData });
+    console.log({ updatedUser });
+    return updatedUser;
+  } catch (error) {
+    console.error('Error updating user', error);
+    // console.log(error.message);
+    throw new Error('Failed to update user.');
   }
 
-  return updatedUser;
+  // return updatedUser;
 };
 
 // delete user by id
@@ -133,7 +156,7 @@ export const UserServices = {
   getAllUsersFromDB,
   getSingleUserFromDB,
   deleteUserFromDB,
-  updateUserFromDB,
+  updateUserIntoDB,
   addNewProductInOrderInDB,
   getOrdersForUserFromDB,
   calculateTotalPriceForUserFromDB,

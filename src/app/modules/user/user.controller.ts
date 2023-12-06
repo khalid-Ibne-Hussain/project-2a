@@ -151,16 +151,16 @@ const getSingleUser = async (req: Request, res: Response) => {
 // update user_________________________________________
 const updateUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
-    // console.log(userId);
-    const updatedUserData = req.body;
+    const userId = Number(req.params.userId);
+    // console.log(typeof userId);
+    const updatedUserData = req.body.user;
     // console.log(updatedUserData);
 
-    const updatedUser = await UserServices.updateUserFromDB(
+    const updatedUser = await UserServices.updateUserIntoDB(
       userId,
       updatedUserData,
     );
-    console.log(updatedUser);
+    // console.log(updatedUser);
 
     if (!updatedUser) {
       // If the user was not found or not updated

@@ -37,7 +37,7 @@ const userSchema = new Schema<TUser>({
   isActive: { type: Boolean, required: true },
   hobbies: { type: [String], required: true },
   address: addressSchema,
-  orders: { type: [orderSchema], required: true },
+  orders: { type: [orderSchema] },
 });
 
 userSchema.pre('save', async function (next) {
@@ -48,20 +48,19 @@ userSchema.pre('save', async function (next) {
   );
   next();
 });
+// userSchema.pre('update', async function (next) {
+//   const user = this;
+//   user.password = await bcrypt.hash(
+//     user.password,
+//     Number(config.bcrypt_salt_rounds),
+//   );
+//   next();
+// });
 //
 userSchema.post('save', function (doc, next) {
   doc.password = '';
   next();
 });
-
-//
-// userSchema.post('save', function (doc, next) {
-//   const ordersArray = { orders: doc.orders };
-
-//   Object.assign(doc, ordersArray);
-
-//   next();
-// });
 
 // create custom static________________
 userSchema.statics.isUserExists = async function (userId) {
@@ -69,10 +68,6 @@ userSchema.statics.isUserExists = async function (userId) {
 
   return existingUser;
 };
-
-// userSchema.pre('find', function (next)){
-//     next();
-// }
 
 // make model_______________
 export const User = model<TUser, UserModel>('User', userSchema);

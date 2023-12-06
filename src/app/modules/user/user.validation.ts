@@ -50,7 +50,7 @@ export const UserValidationSchema = z.object({
   isActive: z.boolean({ required_error: 'isActive is required' }),
   hobbies: z.array(z.string({ required_error: 'Hobbies are required' })),
   address: AddressValidationSchema,
-  orders: z.array(OrderValidationSchema),
+  orders: z.array(OrderValidationSchema).optional(),
 });
 
 export default UserValidationSchema;
