@@ -9,7 +9,8 @@ import { ZodError } from 'zod';
 // create user_____________________________
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body;
+    // console.log(req.body);
+    const userData = req.body;
 
     // data validation __________________
     const validatedData = UserValidationSchema.parse(userData);
@@ -153,7 +154,8 @@ const updateUser = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.params.userId);
     // console.log(typeof userId);
-    const updatedUserData = req.body.user;
+    // const updatedUserData = req.body.user;
+    const updatedUserData = req.body;
     // console.log(updatedUserData);
 
     const updatedUser = await UserServices.updateUserIntoDB(
